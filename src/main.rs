@@ -12,24 +12,29 @@ struct TranslateRequest {
     //target_language: String
 }
 
-async fn help(req: HttpRequest) -> impl Responder {
-
+//Returns instructions on how to use the Translate API
+async fn help(req: HttpRequest) -> HttpResponse {
     match FileReader.read_file(Path::new("./help.txt")) {
-        Err(e) => format!("Error opening help.txt: {}", e),
-        Ok(s) => s
+        Err(e) => HttpResponse::Ok().body((format!("Error opening help.txt: {}", e))),
+        Ok(s) => HttpResponse::Ok().body(s)
     }
 }
 
-async fn index(req: HttpRequest) -> impl Responder {
-    format!("Index Method")
+//Returns a welcome message with some API routes 
+async fn index(req: HttpRequest) -> HttpResponse {
+    match FileReader.read_file(Path::new("./index.txt")) {
+        Err(e) => HttpResponse::Ok().body((format!("Error opening help.txt: {}", e))),
+        Ok(s) => HttpResponse::Ok().body(s)
+    }
 }
 
-async fn ping(req: HttpRequest) -> impl Responder {
-    format!("Pong")
+//Route checks if the API is up and running
+async fn ping(req: HttpRequest) -> HttpResponse {
+    HttpResponse::Ok().body("pong")
 }
 
-async fn translate(req: web::Json<TranslateRequest>) -> impl Responder {
-    format!("translate")
+async fn translate(req: web::Json<TranslateRequest>) -> HttpResponse {
+    HttpResponse::Ok().body("pong")
 }
 
 #[actix_web::main]

@@ -1,0 +1,11 @@
+Hello! Welcome to Rust Translation Server. 
+You can run the following commands:
+	- GET /ping 
+		Returns a value to check if the API is running
+
+	- GET /help
+		Returns instructions on how to work with API
+
+	- POST /translate
+		Translate your phrase
+		
