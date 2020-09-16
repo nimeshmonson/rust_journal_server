@@ -1,4 +1,8 @@
 use actix_web::{web, App, HttpRequest, HttpServer, Responder, HttpResponse, error};
+use std::fs::File;
+use std::io::prelude::*;
+use std::path::Path;
+use serde::{Serialize, Deserialize};
 
 #[derive(Deserialize, Debug)]
 struct TranslateRequest {
@@ -7,9 +11,19 @@ struct TranslateRequest {
 }
 
 async fn help(req: HttpRequest) -> impl Responder {
-    format!("Help method")
-    //TODO add a txt file with instructions and
-    //return here
+    let path = Path::new("./help.txt");
+    
+    let mut file = match File::open(&path) {
+        Err(e) => panic!("Couldn't open {}: {}", path.display(), e),
+        Ok(file) => file,
+    };
+
+    let mut s = String::new();
+
+    match file.read_to_string(&mut s) {
+        Err(e) => panic!("Couldn't read{}: {}", path.display(), e),
+        Ok(_) => format!("{}", s),
+    }
 }
 
 async fn index(req: HttpRequest) -> impl Responder {
@@ -23,10 +37,11 @@ async fn ping(req: HttpRequest) -> impl Responder {
 async fn translate(req: web::Json<TranslateRequest>) -> impl Responder {
     format!("translate")
 }
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {     
         App::new()
-            .app_data(json_config)
             .route("/", web::get().to(index))
             .route("/ping", web::get().to(ping))
             .route("/help", web::get().to(help))
