@@ -1,8 +1,10 @@
 use actix_web::{web, App, HttpRequest, HttpServer, Responder, HttpResponse, error};
-use std::fs::File;
-use std::io::prelude::*;
-use std::path::Path;
 use serde::{Serialize, Deserialize};
+use std::path::Path;
+
+mod file_io;
+
+use file_io::read_file::FileReader;
 
 #[derive(Deserialize, Debug)]
 struct TranslateRequest {
@@ -11,18 +13,10 @@ struct TranslateRequest {
 }
 
 async fn help(req: HttpRequest) -> impl Responder {
-    let path = Path::new("./help.txt");
-    
-    let mut file = match File::open(&path) {
-        Err(e) => panic!("Couldn't open {}: {}", path.display(), e),
-        Ok(file) => file,
-    };
 
-    let mut s = String::new();
-
-    match file.read_to_string(&mut s) {
-        Err(e) => panic!("Couldn't read{}: {}", path.display(), e),
-        Ok(_) => format!("{}", s),
+    match FileReader.read_file(Path::new("./help.txt")) {
+        Err(e) => format!("Error opening help.txt: {}", e),
+        Ok(s) => s
     }
 }
 
