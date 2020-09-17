@@ -6,6 +6,9 @@ You can run the following commands:
 	- GET /help
 		Returns instructions on how to work with API
 
-	- POST /translate
-		Translate your phrase
+	- POST /journal
+		upload your journal entry to today's file
+
+	- GET /journal
+		retrieve journal entries for a particular date
 		
