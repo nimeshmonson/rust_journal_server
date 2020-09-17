@@ -6,6 +6,7 @@ use std::io::Error;
 pub struct FileReader;
 
 impl FileReader {
+    //Reads files
     pub fn read_file(&self, file_path: &Path) -> Result<String, Error> {
 
         let mut file = match File::open(file_path) {
